@@ -20,7 +20,7 @@ public class PermissionWhitelist extends JavaPlugin implements Listener {
 	public void onLogin(PlayerLoginEvent ev) {
 		Player p = ev.getPlayer();
 		if (!p.hasPermission("whitelisted.player")) {
-			ev.disallow(Result.KICK_OTHER, ChatColor.translateAlternateColorCodes('&', getConfig().getString("KickReason").replace("%PLAYER%", p.toString())));
+			ev.disallow(Result.KICK_OTHER, ChatColor.translateAlternateColorCodes('&', getConfig().getString("KickReason").replace("%PLAYER%", p.getName())));
 		}
 	}
 }
