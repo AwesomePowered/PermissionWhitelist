@@ -1,4 +1,4 @@
-package net.lazlecraft.permissionwhitelist;
+package net.awesomepowered.permissionwhitelist;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,20 +14,23 @@ public class PermissionWhitelist extends JavaPlugin implements Listener {
 	
 	public boolean Enabled;
 	public String kickMessage;
+	private String whitelistPermission;
 	
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
-		getConfig().options().copyDefaults(true);
-		this.saveConfig();
+		this.saveDefaultConfig();
+		reConf();
 	}
 	
 	public void reConf () {
 		Enabled = getConfig().getBoolean("Enabled");
 		kickMessage = getConfig().getString("KickReason");
+		whitelistPermission = getConfig().getString("Permission");
+		this.saveConfig();
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		if (((commandLabel.equalsIgnoreCase("PermissionWhitelist")) || (commandLabel.equalsIgnoreCase("pw")))) {
+		if (((commandLabel.equalsIgnoreCase("PermissionWhitelist")) || (commandLabel.equalsIgnoreCase("pwl")))) {
 			if (args.length == 0) {
 			sender.sendMessage(ChatColor.GOLD + "This plugin is created by the almighty" + ChatColor.GREEN + " LaxWasHere");
 			sender.sendMessage(ChatColor.GOLD + "Running version: " + this.getDescription().getVersion());
@@ -39,12 +42,12 @@ public class PermissionWhitelist extends JavaPlugin implements Listener {
 					if (args[0].equalsIgnoreCase("enable")) {
 						Enabled = true;
 						this.getConfig().set("Enabled", true);
-						this.saveConfig();
+						reConf();
 						sender.sendMessage(ChatColor.GREEN + "PermissionWhitelist Enabled!");
 					} if (args[0].equalsIgnoreCase("disable")) {
 						Enabled = false;
 						this.getConfig().set("Enabled", false);
-						this.saveConfig();
+						reConf();
 						sender.sendMessage(ChatColor.RED + "PermissionWhitelist Disabled!");
 					}
 				}
@@ -55,7 +58,7 @@ public class PermissionWhitelist extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onLogin(PlayerLoginEvent ev) {
 		Player p = ev.getPlayer();
-		if (!p.hasPermission("whitelisted.player") && Enabled) {
+		if (!p.hasPermission(whitelistPermission) && Enabled) {
 			ev.disallow(Result.KICK_OTHER, ChatColor.translateAlternateColorCodes('&', kickMessage.replace("%PLAYER%", p.getName())));
 		}
 	}

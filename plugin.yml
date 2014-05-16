@@ -3,6 +3,6 @@ author: LaxWasHere
 version: 0.2
 main: net.lazlecraft.permissionwhitelist.PermissionWhitelist
 commands:
-    wermissionwhitelist:
+    permissionwhitelist:
         description: PermissionWhitelist commands
-        aliases: pw
+        aliases: pwl
